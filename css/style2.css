@@ -1,0 +1,74 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+.content {
+    position: relative;
+    top: 40px;
+}
+.receipt {
+    display: none;
+}
+.sample-text {
+    display: none;
+}
+.cash {
+    display: none;
+}
+@media print and (max-width: 980px) {
+    #totalCount{
+        visibility: hidden;
+    }
+    .btn {
+        visibility: hidden;   
+     }
+     .shortcut {
+         display: none;
+     }
+     .title {
+         border: none;
+         display:none;
+     }
+     .barcode {
+         display:none;
+     }
+     .product-list {
+         padding: 0;
+         width: 100%;
+     }
+     .bar_code {
+         visibility: hidden;
+     }
+     input,select,span {
+        border: none !important; 
+        border-width: 0; 
+        box-shadow: none;
+    }
+    .alias {
+        visibility: hidden;
+    }
+    select {
+        width: 100%;
+    }
+    .product_name {
+        width:280px;
+    }
+    .receipt {
+        width: 500px;
+        margin: 20px auto;
+        display: block;
+        text-align: center;
+    }
+    .receipt h4 {
+        margin-bottom: 30px;
+    }
+    .sample-text {
+        display: block;
+        margin-top: 25px;
+        margin-left: 30px;
+    }
+    .cash {
+        display: block;
+    }
+
+
+}
