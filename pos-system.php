@@ -71,16 +71,6 @@
 				window.close();
 			}
 		}
-		// function printdiv(printpage) {
-		// 	var headstr = "<html><head><title></title></head><body>";
-		// 	var footstr = "</body>";
-		// 	var newstr = document.all.item(printpage).innerHTML;
-		// 	var oldstr = document.body.innerHTML;
-		// 	document.body.innerHTML = headstr+newstr+footstr;
-		// 	window.print(); 
-		// 	document.body.innerHTML = oldstr;
-		// 	return false;
-		// }
 	</script>
 </head>
 <body>
@@ -207,7 +197,7 @@
 
 		<!-- Modal Payment -->
 		<div class="modal fade" id="totalCount">
-		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 
 			<!-- Modal Header -->
@@ -233,7 +223,7 @@
 				</div>
 				<button type="submit" name="payment" class="btn btn-primary mt-3">Save</button>
 			</form>
-			</div>
+		</div>
 		
 <script>
 	$(document).ready(function() {
@@ -274,285 +264,290 @@
 			$monthName = date('F', mktime(0, 0, 0, $monthNum, 10)); // March
 		?>
 
-<script>
-setTimeout(function() {
-	// HIDE MESSAGE AFTER 3 SECONDS
-    $('#showMsg').fadeOut('slow');
-	}, 3000);
-	// SHORCUT KEY FOR INPUT FORM
-	$(window).on('keydown',function(e){
-        if($.inArray(e.which,[112,113,114,115]) > -1 && e.ctrlKey == true){
-            e.preventDefault()
-            if(e.which == 112){
-                $('#bar_code_1').val('').focus()
-            }
-            if(e.which == 113){
-                $('#name_1').focus().select()
-            }
-            if(e.which == 114){
-				$('#alias_1').val('').focus()
-            }
-			if(e.which == 115){
-				window.history.back()
-            }
-        }
-    })
-    // OPEN PAYMENT MODAL USING KEYBOARD
-	$(document).on('keydown', function (e) {
-    // You may replace `m` with whatever key you want
-    if ((e.metaKey || e.ctrlKey) && ( String.fromCharCode(e.which).toLowerCase() === 'm') ) {
-		$("#totalCount").modal('show');
-    }
-});
-	// DISCOUNT FUNCTION
-	$(document).on("change keyup blur", "#priceDiscount", function() {
-	var main = $('#getTotal').val();
-	var disc = $('#priceDiscount').val();
-	var dec = (disc/100).toFixed(2); //its convert 10 into 0.10
-	var mult = main*dec; // gives the value for subtract from main value
-	var discont = main-mult;
-	$('#getTotal').val(discont);
-	});
-</script>
-
-<script type="text/javascript">
-// prevent space
-function RestrictSpace() {
-    if (event.keyCode == 32) {
-        return false;
-    }
-}
-// onload focus on barcode input form
-function default_focus() {
-	document.getElementById('bar_code_1').focus();
-}
-
-// barcode input form
-// call on onchange
-// get_detail(this.value,1)
-function get_detail(b,n) {
-	// add unique number to new html created html element
-	var nx = n+1;
-	// ajax request
-	$.ajax({  
-		// type of request
-		type:"POST", 
-		// url or file to send request 
-		url:"ajax_product.php",  
-		// data to be sent to server
-		data:{bar_code:b,action_type:"get_detail"},
-		// function to run if request is success
-		success:function(data){
-			// convert JSON to JavaScript Object
-			var data = $.parseJSON(data);
-			if(data.type == 'Success') {
-				
-				//Check for duplicate value in input form
-				var barCode = document.querySelectorAll("#dd input[name='bar_code[]']");
-				for(key = 0; key < barCode.length - 1; key++)  {
-					if(barCode[key].value == data.bar_code){
-						alert("Already Exist");
-						document.getElementById('bar_code_'+n).value = '';
-						document.getElementById('bar_code_'+n).focus();
-						return false;
-					}					
+	<script>
+	setTimeout(function() {
+		// HIDE MESSAGE AFTER 3 SECONDS
+		$('#showMsg').fadeOut('slow');
+		}, 3000);
+		// SHORCUT KEY FOR INPUT FORM
+		$(window).on('keydown',function(e){
+			if($.inArray(e.which,[112,113,114,115]) > -1 && e.ctrlKey == true){
+				e.preventDefault()
+				if(e.which == 112){
+					$('#bar_code_1').val('').focus()
 				}
-				// append html element to #app tbody
-				var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
-				// assign response value from ajax request to new html element
-				document.getElementById('name_'+n).value = data.name;
-				document.getElementById('alias_'+n).value = data.alias;
-				document.getElementById('mrp_'+n).value = data.mrp;
-				document.getElementById('quantity_'+n).value = 1;
-				document.getElementById('av_quantity_'+n).value = data.av_quantity;
-				document.getElementById('sale_price_'+n).value = data.sale_price;
-				document.getElementById('sale_price_org_'+n).value = data.sale_price;
-				document.getElementById('igst_'+n).value = data.igst;
-				
-				//Get Value For Total
-				var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
-				var newA = [];
-				for(key=0; key < salePrice.length; key++)  {
-					if(salePrice[key].value != ''){
-						newA.push(parseFloat(salePrice[key].value));
-					}
+				if(e.which == 113){
+					$('#name_1').focus().select()
 				}
-				var aac = newA.reduce(getSum);
-				document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-				document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
-				document.getElementById('bar_code_'+nx).focus();
-			} else {
-				// alert if barcode not found
-				alert("Barcode Not Found");
-				// clear barcode input form
-				document.getElementById('bar_code_'+n).value = '';
-				// focus on barcode input form
-				document.getElementById('bar_code_'+n).focus();
-				return false;
+				if(e.which == 114){
+					$('#alias_1').val('').focus()
+				}
+				if(e.which == 115){
+					window.history.back()
+				}
 			}
-		}  
+		})
+		// OPEN PAYMENT MODAL USING KEYBOARD
+		$(document).on('keydown', function (e) {
+		// You may replace `m` with whatever key you want
+		if ((e.metaKey || e.ctrlKey) && ( String.fromCharCode(e.which).toLowerCase() === 'm') ) {
+			$("#totalCount").modal('show');
+		}
 	});
-}
-// choose product input form
-// call on onchange
-// get_detail_name(this.value,1)
-function get_detail_name(i,n) {
-	var nx = n+1;
-	
-	$.ajax({  
-		type:"POST",  
-		url:"ajax_product.php",  
-		data:{name:i,action_type:"get_detail_by_name"},
-		success:function(data){ 
-			var data = $.parseJSON(data);
-			if(data.type == 'Success'){
-				
-				//Check Duplicate Value
-				var barCode = document.querySelectorAll("#dd input[name='bar_code[]']");
-				for(key=0; key < barCode.length - 1; key++)  {
-					if(barCode[key].value == data.bar_code){
-						alert("Already Exist");
-						return false;
-					}					
-				}
-								
-				//Appending New Row
-				var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
-				document.getElementById('bar_code_'+n).value = data.bar_code;
-				document.getElementById('alias_'+n).value = data.alias;
-				document.getElementById('mrp_'+n).value = data.mrp;
-				document.getElementById('quantity_'+n).value = 1;
-				document.getElementById('av_quantity_'+n).value = data.av_quantity;
-				document.getElementById('sale_price_'+n).value = data.sale_price;
-				document.getElementById('sale_price_org_'+n).value = data.sale_price;
-				document.getElementById('igst_'+n).value = data.igst;
-				
-				//Get Value For Total
-				var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
-				var newA = [];
-				for(key=0; key < salePrice.length; key++)  {
-					if(salePrice[key].value != ''){
-						newA.push(parseFloat(salePrice[key].value));
-					}
-				}
-				var aac = newA.reduce(getSum);
-				document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-				document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
+		// DISCOUNT FUNCTION
+		$(document).on("change keyup blur", "#priceDiscount", function() {
+		var main = $('#getTotal').val();
+		var disc = $('#priceDiscount').val();
+		var dec = (disc/100).toFixed(2); //its convert 10 into 0.10
+		var mult = main*dec; // gives the value for subtract from main value
+		var discont = main-mult;
+		$('#getTotal').val(discont);
+		});
+	</script>
 
-				
-				document.getElementById('name_'+nx).focus();
-			}else{
-				alert("Prduct Not Found!");
-			}
-		}  
-	});
-}
-// alias input form
-// call on onchange
-// get_detail_alias(this.value,1)
-function get_detail_alias(a,n) {
-	var nx = n+1;
-	
-	$.ajax({  
-		type:"POST",  
-		url:"ajax_product.php",  
-		data:{alias:a,action_type:"get_detail_by_alias"},
-		success:function(data){
-			
-			var data = $.parseJSON(data);
-			if(data.type == 'Success'){
-				
-				//Check Duplicate Value
-				var aliasA = document.querySelectorAll("#dd input[name='alias[]']");
-				for(key=0; key < aliasA.length - 1; key++)  {
-					if(aliasA[key].value == data.alias){
-						alert("Alias Exist");
-						document.getElementById('alias_'+n).value = '';
-						document.getElementById('alias_'+n).focus();
-						return false;
-					}					
-				}
-				
-				var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
-				document.getElementById('name_'+n).value = data.name;
-				document.getElementById('bar_code_'+n).value = data.bar_code;
-				document.getElementById('mrp_'+n).value = data.mrp;
-				document.getElementById('quantity_'+n).value = 1;
-				document.getElementById('av_quantity_'+n).value = data.av_quantity;
-				document.getElementById('sale_price_'+n).value = data.sale_price;
-				document.getElementById('sale_price_org_'+n).value = data.sale_price;
-				document.getElementById('igst_'+n).value = data.igst;
-				
-				//Get Value For Total
-				var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
-				var newA = [];
-				for(key=0; key < salePrice.length; key++)  {
-					if(salePrice[key].value != ''){
-						newA.push(parseFloat(salePrice[key].value));
-					}
-				}
-				var aac = newA.reduce(getSum);
-				document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-				document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
-
-				
-				document.getElementById('bar_code_'+nx).focus();
-			} else {
-				alert("Alias Not Found");
-				document.getElementById('alias_'+n).value = '';
-				document.getElementById('alias_'+n).focus();
-				return false;
-			}
-		}  
-	});
-}
-
-function getSum(total, num) {
-return parseFloat(total + num);
-}
-
-// quantity input form
-// call on keyup
-// get_quantity(this.value, 1)
-function get_quantity(p,n) {
-	// value of sale price input form
-	var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
-
-	var newA = [];
-	for(key = 0; key < salePrice.length; key++)  {
-		if(salePrice[key].value != ''){
-			newA.push(parseFloat(salePrice[key].value));
+	<script>
+	// prevent space
+	function RestrictSpace() {
+		if (event.keyCode == 32) {
+			return false;
 		}
 	}
-	//alert(newA);
-	var aac = newA.reduce(getSum);
-	document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-	//alert(aac);
-	
-	var sale_price_org = document.getElementById('sale_price_org_'+ n).value;
-	var spgF = parseFloat(sale_price_org);
-	var sp = document.getElementById('sale_price_'+ n).value;
-	var spF = parseFloat(sp);
-	document.getElementById('quantity_'+ n ).value = (p / parseFloat(sale_price_org)).toFixed(3);
+	// onload focus on barcode input form
+	function default_focus() {
+		document.getElementById('bar_code_1').focus();
+	}
+
+	// barcode input form
+	// call on onchange
+	// get_detail(this.value,1)
+	function get_detail(b,n) {
+		// add unique number to new html created html element
+		var nx = n + 1;
+		// perform http request AJAX
+		$.ajax({  
+			// type of request
+			type:"POST", 
+			// url or file to send request 
+			url:"ajax_product.php",  
+			// data to be sent to server
+			data:{bar_code:b,action_type:"get_detail"},
+			// function to run if request is success
+			success:function(data) {
+				// convert JSON to JavaScript Object
+				var data = $.parseJSON(data);
+				// check if the property data has a value of Success
+				if(data.type == 'Success') {
 		
-}
-
-// remove input form
-function remove_data(r) {
-	$('#'+r).remove();
-	//Get Value For Total
-	var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
-	var newA = [];
-	for(key = 0; key < salePrice.length; key++)  {
-		if(salePrice[key].value != ''){
-			newA.push(parseFloat(salePrice[key].value));
-		}
+					//Check for duplicate value in input form
+					var barCode = document.querySelectorAll("#dd input[name='bar_code[]']");
+					for(key = 0; key < barCode.length - 1; key++)  {
+						if(barCode[key].value == data.bar_code) {
+							// show a message
+							alert("Already Exist");
+							document.getElementById('bar_code_'+ n).value = '';
+							document.getElementById('bar_code_'+ n).focus();
+							return false;
+						}					
+					}
+					// insert new html element to element with id app tbody
+					var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
+					// assign data value from ajax request to new html element
+					document.getElementById('name_'+ n).value = data.name;
+					document.getElementById('alias_'+ n).value = data.alias;
+					document.getElementById('mrp_'+ n).value = data.mrp;
+					document.getElementById('quantity_'+ n).value = 1;
+					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
+					document.getElementById('sale_price_'+ n).value = data.sale_price;
+					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
+					document.getElementById('igst_'+ n).value = data.igst;
+					
+					//Get the total value
+					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+					var newA = [];
+					for(key = 0; key < salePrice.length; key++) {
+						if(salePrice[key].value != '') {
+							// add salePrice to empty array newA
+							newA.push(parseFloat(salePrice[key].value));
+						}
+					}
+					// call reducer function on each element of the array and returns a single output value.
+					var aac = newA.reduce(getSum);
+					document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+					document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
+					// focus on the new barcode input
+					document.getElementById('bar_code_'+ nx).focus();
+				} else {
+					// alert if barcode not found
+					alert("Barcode Not Found");
+					// clear barcode input form
+					document.getElementById('bar_code_'+ n).value = '';
+					// focus on barcode input form
+					document.getElementById('bar_code_'+ n).focus();
+					return false;
+				}
+			}  
+		});
 	}
-	var aac = newA.reduce(getSum);
-	document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-	document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
-}
-</script>
+	// choose product input form
+	// call on onchange
+	// get_detail_name(this.value,1)
+	function get_detail_name(i,n) {
+		var nx = n+1;
+		
+		$.ajax({  
+			type:"POST",  
+			url:"ajax_product.php",  
+			data:{name:i,action_type:"get_detail_by_name"},
+			success:function(data) { 
+				var data = $.parseJSON(data);
+				if(data.type == 'Success') {
+					
+					//Check Duplicate Value
+					var barCode = document.querySelectorAll("#dd input[name='bar_code[]']");
+					for(key=0; key < barCode.length - 1; key++)  {
+						if(barCode[key].value == data.bar_code) {
+							alert("Already Exist");
+							return false;
+						}					
+					}
+									
+					// insert new element to HTML element with id app tbody
+					var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
+					document.getElementById('bar_code_'+ n).value = data.bar_code;
+					document.getElementById('alias_'+ n).value = data.alias;
+					document.getElementById('mrp_'+ n).value = data.mrp;
+					document.getElementById('quantity_'+ n).value = 1;
+					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
+					document.getElementById('sale_price_'+ n).value = data.sale_price;
+					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
+					document.getElementById('igst_'+ n).value = data.igst;
+					
+					//Get Value For Total
+					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+					var newA = [];
+					for(key = 0; key < salePrice.length; key++)  {
+						if(salePrice[key].value != ''){
+							newA.push(parseFloat(salePrice[key].value));
+						}
+					}
+					var aac = newA.reduce(getSum);
+					document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+					document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
+					document.getElementById('name_'+ nx).focus();
+				} else {
+					alert("Prduct Not Found!");
+				}
+			}  
+		});
+	}
+	// alias input form
+	// call on onchange
+	// get_detail_alias(this.value,1)
+	function get_detail_alias(a,n) {
+		var nx = n+1;
+		
+		$.ajax({  
+			type:"POST",  
+			url:"ajax_product.php",  
+			data:{alias:a,action_type:"get_detail_by_alias"},
+			success:function(data){
+				
+				var data = $.parseJSON(data);
+				if(data.type == 'Success') {
+					
+					//Check Duplicate Value
+					var aliasA = document.querySelectorAll("#dd input[name='alias[]']");
+					for(key=0; key < aliasA.length - 1; key++)  {
+						if(aliasA[key].value == data.alias){
+							alert("Alias Exist");
+							document.getElementById('alias_'+n).value = '';
+							document.getElementById('alias_'+n).focus();
+							return false;
+						}					
+					}
+					// insert new element to HTML element with id app tbody
+					var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
+					document.getElementById('name_'+ n).value = data.name;
+					document.getElementById('bar_code_'+ n).value = data.bar_code;
+					document.getElementById('mrp_'+ n).value = data.mrp;
+					document.getElementById('quantity_'+ n).value = 1;
+					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
+					document.getElementById('sale_price_'+ n).value = data.sale_price;
+					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
+					document.getElementById('igst_'+ n).value = data.igst;
+					
+					//Get Value For Total
+					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+					var newA = [];
+					for(key=0; key < salePrice.length; key++)  {
+						if(salePrice[key].value != ''){
+							newA.push(parseFloat(salePrice[key].value));
+						}
+					}
+
+					var aac = newA.reduce(getSum);
+					document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+					document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
+
+					
+					document.getElementById('bar_code_'+nx).focus();
+				} else {
+					alert("Alias Not Found");
+					document.getElementById('alias_'+ n).value = '';
+					document.getElementById('alias_'+ n).focus();
+					return false;
+				}
+			}  
+		});
+	}
+	// function to get sum of each product
+	function getSum(total, num) {
+		// return floating point number
+		return parseFloat(total + num);
+	}
+
+	// quantity input form
+	// call on keyup
+	// get_quantity(this.value, 1)
+	function get_quantity(p,n) {
+		// value of sale price input form
+		var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+
+		var newA = [];
+		for(key = 0; key < salePrice.length; key++)  {
+			if(salePrice[key].value != ''){
+				newA.push(parseFloat(salePrice[key].value));
+			}
+		}
+		//alert(newA);
+		var aac = newA.reduce(getSum);
+		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+		//alert(aac);
+		
+		var sale_price_org = document.getElementById('sale_price_org_'+ n).value;
+		var spgF = parseFloat(sale_price_org);
+		var sp = document.getElementById('sale_price_'+ n).value;
+		var spF = parseFloat(sp);
+		document.getElementById('quantity_'+ n ).value = (p / parseFloat(sale_price_org)).toFixed(3);
+			
+	}
+
+	// remove input form
+	function remove_data(r) {
+		$('#'+r).remove();
+		//Get Value For Total
+		var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+		var newA = [];
+		for(key = 0; key < salePrice.length; key++)  {
+			if(salePrice[key].value != ''){
+				newA.push(parseFloat(salePrice[key].value));
+			}
+		}
+		var aac = newA.reduce(getSum);
+		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+		document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
+	}
+	</script>
 
 </body>
 </html>
