@@ -225,33 +225,33 @@
 			</form>
 		</div>
 		
-<script>
-	$(document).ready(function() {
-		$("#tenderAmount").on("input", function() {
-		$("#output").text($(this).val());
-		});
-	});
-	$('#totalCount').on('shown.bs.modal', function() {
-		$('#tenderAmount').focus();
-	})
-	// math operation on payment
-	$(document).on("input", "#discount", function() {
-		var main = $('#getTotal').val();
-		var disc = $('#discount').val();
-		var dec = (disc / 100).toFixed(2); //its convert 10 into 0.10
-		var mult = main * dec; // gives the value for subtract from main value
-		var discont = main - mult;
-		$('#calcTotal').val(discont);
-		});
-		$('#tenderAmount').on('input',function() {
-		var tender = $(this).val()
-		var change = 0;
-		change = parseFloat(tender) - parseFloat($('#calcTotal').val());
-		$('#change').val(parseFloat(change).toLocaleString('en-US',{style:'decimal',maximumFractionDigits:2,minimumFractionDigits:2}))
-		$('[name="amount_change"]').val(parseFloat(change).toFixed(2))
-		$('[name="amount_tendered"]').val(parseFloat(tender))
-		})
-</script>
+		<script>
+			$(document).ready(function() {
+				$("#tenderAmount").on("input", function() {
+				$("#output").text($(this).val());
+				});
+			});
+			$('#totalCount').on('shown.bs.modal', function() {
+				$('#tenderAmount').focus();
+			})
+			// math operation on payment
+			$(document).on("input", "#discount", function() {
+				var main = $('#getTotal').val();
+				var disc = $('#discount').val();
+				var dec = (disc / 100).toFixed(2); //its convert 10 into 0.10
+				var mult = main * dec; // gives the value for subtract from main value
+				var discont = main - mult;
+				$('#calcTotal').val(discont);
+				});
+				$('#tenderAmount').on('input',function() {
+				var tender = $(this).val()
+				var change = 0;
+				change = parseFloat(tender) - parseFloat($('#calcTotal').val());
+				$('#change').val(parseFloat(change).toLocaleString('en-US',{style:'decimal',maximumFractionDigits:2,minimumFractionDigits:2}))
+				$('[name="amount_change"]').val(parseFloat(change).toFixed(2))
+				$('[name="amount_tendered"]').val(parseFloat(tender))
+				})
+		</script>
 		<!-- Modal footer -->
 		<div class="modal-footer">
 			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
