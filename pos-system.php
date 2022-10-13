@@ -553,6 +553,7 @@
 		var aac = newA.reduce(getSum);
 		// round the number of aac var to nearest integer
 		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
+		document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
 	}
 
 	// remove input form
