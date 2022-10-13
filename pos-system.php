@@ -370,8 +370,9 @@
 							newA.push(parseFloat(salePrice[key].value));
 						}
 					}
-					// call reducer function on each element of the array and returns a single output value.
+					// compute the sum of newA array
 					var aac = newA.reduce(getSum);
+					// round the number of aac var to nearest integer
 					document.getElementById('getTotal').value = Math.round(parseFloat(aac));
 					document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
 					// focus on the new barcode input
@@ -484,7 +485,7 @@
 							newA.push(parseFloat(salePrice[key].value));
 						}
 					}
-
+					// compute the sum of newA array
 					var aac = newA.reduce(getSum);
 					document.getElementById('getTotal').value = Math.round(parseFloat(aac));
 					document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
@@ -500,7 +501,7 @@
 			}  
 		});
 	}
-	// function to get sum of each product
+	// reducer function for array element
 	function getSum(total, num) {
 		// return floating point number
 		return parseFloat(total + num);
@@ -519,10 +520,8 @@
 				newA.push(parseFloat(salePrice[key].value));
 			}
 		}
-		//alert(newA);
 		var aac = newA.reduce(getSum);
 		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
-		//alert(aac);
 		
 		var sale_price_org = document.getElementById('sale_price_org_'+ n).value;
 		var spgF = parseFloat(sale_price_org);
@@ -530,6 +529,30 @@
 		var spF = parseFloat(sp);
 		document.getElementById('quantity_'+ n ).value = (p / parseFloat(sale_price_org)).toFixed(3);
 			
+	}
+
+	// quantity calculate price
+	// calculate_price(this.value,1)
+	function calculate_price(q,n){
+		// get the value of sale price
+		var sale_price_org = document.getElementById('sale_price_org_'+ n).value;
+		// multiply the sale_price_org to the value of quantity input form
+		var gt = document.getElementById('sale_price_'+ n).value = (sale_price_org * q).toFixed(2);
+		
+		
+		var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
+
+		var newA = [];
+		for(key = 0; key < salePrice.length ; key++)  {
+			if(salePrice[key].value != ''){
+				// add the value of salePrice to newA array
+				newA.push(parseFloat(salePrice[key].value));
+			}
+		}
+		// compute the sum of newA array
+		var aac = newA.reduce(getSum);
+		// round the number of aac var to nearest integer
+		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
 	}
 
 	// remove input form
@@ -544,6 +567,7 @@
 			}
 		}
 		var aac = newA.reduce(getSum);
+		// round the number of aac var to nearest integer
 		document.getElementById('getTotal').value = Math.round(parseFloat(aac));
 		document.getElementById('calcTotal').value = Math.round(parseFloat(aac));
 	}
