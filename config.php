@@ -1,4 +1,5 @@
 <?php
+// MySQLi Object Oriented
 $servername = "localhost";
 $username = "root";
 $password = "";

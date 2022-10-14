@@ -26,7 +26,7 @@ session_start();
 					// fetch a result row as an associative array
 					$row = $sql->fetch_array();
 					// assign the value of each row in associative array
-					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'name'=>$row['name'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit'],'igst'=>$row['igst']);
+					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit']);
 					// encode associative array into JSON object
 					echo json_encode($detail);
 				} else {
@@ -34,6 +34,7 @@ session_start();
 					echo json_encode($detail);
 				}
 			}
+			// prevent the next code from running if the case is found
 			break;
 			// block of code to execute if the case is get_detail_by_name
 			case "get_detail_by_name":
@@ -43,7 +44,7 @@ session_start();
 				$numRow = $sql->num_rows;
 				if($numRow > 0) {
 					$row = $sql->fetch_array();
-					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit'],'igst'=>$row['igst']);
+					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit']);
 					echo json_encode($detail);	
 				} else {
 					$detail = array('type'=>'Error');
@@ -60,7 +61,7 @@ session_start();
 				$numRow = $sql->num_rows;
 				if($numRow > 0) {
 					$row = $sql->fetch_array();
-					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'name'=>$row['name'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit'],'igst'=>$row['igst']);
+					$detail = array('type'=>'Success','bar_code'=>$row['bar_code'],'alias'=>$row['alias'],'mrp'=>$row['mrp'],'sale_price'=>$row['sale_price'],'av_quantity'=>$row['unit']);
 					echo json_encode($detail);	
 				} else {
 					$detail = array('type'=>'Error');

@@ -12,10 +12,10 @@
 		$amount_change = $_POST['amount_change'];
 		$month = date('m');
 		$year = date('Y');
-
+		// perform a query to database
 		$sql = mysqli_query($conn, "INSERT INTO transaction_list(USERNAME, TOTAL_AMOUNT, TENDERED_AMOUNT, DISCOUNT, TOTAL_CHANGE,MONTH,YEAR) 
 		VALUES('$username','$total_amount','$amount_tendered','$discount','$amount_change','$month','$year')");
-
+			// check if query is successful
 			if($sql) {
 				$success = "Payment Success";
 			} else {
@@ -54,22 +54,21 @@
 				// set the value of valud to false
 				valid = false;
 			} else {
-				// call receipt function
-				printReceipt();
+				// show a confirm box
+				let conf = confirm("Print Receipt?");
+				if (conf) {
+					// get the element that open a modal payment
+					let myModalEl = document.getElementById('totalCount');
+					// manually call a payment modal
+					let modal = bootstrap.Modal.getInstance(myModalEl);
+					// call the print method
+					window.print();
+				}  else {
+					conf = "";
+				}
 			}
 			// return the value of valid
 			return valid;
-		}
-		// function to print receipt
-		function printReceipt() {	
-			let conf = confirm("Print Receipt?");
-			if (conf = true) {
-				let myModalEl = document.getElementById('totalCount')
-				let modal = bootstrap.Modal.getInstance(myModalEl)
-				window.print();
-			}  else if(conf == false ) {
-				window.close();
-			}
 		}
 	</script>
 </head>
@@ -88,7 +87,7 @@
             </fieldset>
 		</div>
 	</div>
-
+	<!-- receipt -->
 	<div class="receipt">
 			<h2>Cashier POS System</h2>
 			<h4>using barcode scanner</h4>
@@ -112,7 +111,7 @@
 	<div id="showMsg">
         <?php if($success){ ?>
         <div class="alert alert-success mt-1"><?php echo htmlentities($success);?></div>
-        <?php  } else if($error){ ?>
+        <?php } else if($error){ ?>
         <div class="alert alert-danger mt-1"><?php echo htmlentities($error) ?></div>  
         <?php } ?>
     </div>
@@ -124,8 +123,6 @@
 			<div class="panel mt-3">
 				<div class="panel-body">
 				<form class="billingForm" method="POST" name="billingForm" id="dd" autocomplete="off">
-					<input type="hidden" id="user_id" name="user_id" value="<?php echo $_SESSION['user_id'];?>" />
-					<input type="hidden" id="invoice_id" name="invoice_id" value="<?php echo $invoice_id;?>" />
 					<table id="app" class="table-responsive">
 						<thead>
 							<th class="bar_code">Barcode</th>
@@ -178,12 +175,12 @@
 		<!-- PRINT RECEIPT OUTPUT -->
 		<div class="input-group ms-auto w-50">
 			<div class="cash input-group w-50">
-				<span class="input-group-text">Cash:<div id="output"></div></span>
+				<span class="input-group-text">Cash :<div id="output"></div></span>
 			</div>
-			<span class="input-group-text">Total Price:</span>
-			<input type="number" class="form-control" readonly name="total"  id="getTotal" />
+			<span class="input-group-text">Total Price :</span>
+			<input type="number" class="form-control" readonly name="total" id="getTotal" />
 			<div class="input-group w-50">
-				<span class="input-group-text">Discount%:</span>
+				<span class="input-group-text">Discount %:</span>
 				<input type="number" class="form-control" id="discount" name="discount">
 			</div>
 		</div>
@@ -228,29 +225,30 @@
 		<script>
 			$(document).ready(function() {
 				$("#tenderAmount").on("input", function() {
-				$("#output").text($(this).val());
+					$("#output").text($(this).val());
 				});
-			});
-			$('#totalCount').on('shown.bs.modal', function() {
-				$('#tenderAmount').focus();
-			})
-			// math operation on payment
-			$(document).on("input", "#discount", function() {
-				var main = $('#getTotal').val();
-				var disc = $('#discount').val();
-				var dec = (disc / 100).toFixed(2); //its convert 10 into 0.10
-				var mult = main * dec; // gives the value for subtract from main value
-				var discont = main - mult;
-				$('#calcTotal').val(discont);
-				});
-				$('#tenderAmount').on('input',function() {
-				var tender = $(this).val()
-				var change = 0;
-				change = parseFloat(tender) - parseFloat($('#calcTotal').val());
-				$('#change').val(parseFloat(change).toLocaleString('en-US',{style:'decimal',maximumFractionDigits:2,minimumFractionDigits:2}))
-				$('[name="amount_change"]').val(parseFloat(change).toFixed(2))
-				$('[name="amount_tendered"]').val(parseFloat(tender))
+				// focus on payment input when modal open
+				$('#totalCount').on('shown.bs.modal', function() {
+					$('#tenderAmount').focus();
 				})
+				// math operation on payment
+				$(document).on("input", "#discount", function() {
+					var main = $('#getTotal').val();
+					var disc = $('#discount').val();
+					var dec = (disc / 100).toFixed(2); //its convert 10 into 0.10
+					var mult = main * dec; // gives the value for subtract from main value
+					var discont = main - mult;
+					$('#calcTotal').val(discont);
+					});
+					$('#tenderAmount').on('input',function() {
+					var tender = $(this).val()
+					var change = 0;
+					change = parseFloat(tender) - parseFloat($('#calcTotal').val());
+					$('#change').val(parseFloat(change).toLocaleString('en-US',{style:'decimal',maximumFractionDigits:2,minimumFractionDigits:2}))
+					$('[name="amount_change"]').val(parseFloat(change).toFixed(2))
+					$('[name="amount_tendered"]').val(parseFloat(tender))
+				})
+			});
 		</script>
 		<!-- Modal footer -->
 		<div class="modal-footer">
@@ -351,7 +349,7 @@
 					}
 					// insert new html element to element with id app tbody
 					var newRow = $('#app tbody').append('<tr id='+nx+'><td><input type="text" autofocus  class="barcode form-control" onkeypress="return RestrictSpace()" onchange="get_detail(this.value,'+nx+')" id="bar_code_'+nx+'" name="bar_code[]" required /></td><td><select name="name[]" id="name_'+nx+'" class="form-control" onchange="get_detail_name(this.value,'+nx+')" required ><option value="">Choose Product</option><?php $sqlP = $conn->query("SELECT * FROM product ORDER BY name ASC"); while($rowP = $sqlP->fetch_array()){?><option value="<?php echo $rowP['name'];?>"><?php echo $rowP['name'];?></option><?php }?></select></td><td><input type="text" id="alias_'+nx+'" class="form-control alias" onkeypress="return RestrictSpace()" onchange="get_detail_alias(this.value,'+nx+')" name="alias[]" /></td><td><input type="text"  id="mrp_'+nx+'" readonly class="form-control" name="mrp[]" required /></td><td><input type="number" id="quantity_'+nx+'" step="0.001" class="form-control" onkeyup="calculate_price(this.value,'+nx+')" name="quantity[]" required /></td><td><input type="text" id="av_quantity_'+nx+'" readonly class="form-control" name="av_quantity[]" /></td><td><input type="number" id="sale_price_'+nx+'"  class="form-control" onkeyup="get_quantity(this.value,'+nx+')" name="sale_price[]" step="0.01" required /><input type="hidden" class="form-control" id="sale_price_org_'+nx+'" name="sale_price_org[]" /><input type="hidden" class="form-control" id="igst_'+nx+'" name="igst[]" /></td><td><a href="#" onclick="remove_data('+ nx +')" class="btn btn-sm btn-icon btn-pure btn-default on-default remove-row" data-toggle="tooltip" data-original-title="Remove"><img src="img/close.png" width="30"></a></td></tr>');
-					// assign data value from ajax request to new html element
+					// assign response from request
 					document.getElementById('name_'+ n).value = data.name;
 					document.getElementById('alias_'+ n).value = data.alias;
 					document.getElementById('mrp_'+ n).value = data.mrp;
@@ -359,7 +357,6 @@
 					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
 					document.getElementById('sale_price_'+ n).value = data.sale_price;
 					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
-					document.getElementById('igst_'+ n).value = data.igst;
 					
 					//Get the total value
 					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
@@ -421,8 +418,7 @@
 					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
 					document.getElementById('sale_price_'+ n).value = data.sale_price;
 					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
-					document.getElementById('igst_'+ n).value = data.igst;
-					
+				
 					//Get Value For Total
 					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");
 					var newA = [];
@@ -475,7 +471,6 @@
 					document.getElementById('av_quantity_'+ n).value = data.av_quantity;
 					document.getElementById('sale_price_'+ n).value = data.sale_price;
 					document.getElementById('sale_price_org_'+ n).value = data.sale_price;
-					document.getElementById('igst_'+ n).value = data.igst;
 					
 					//Get Value For Total
 					var salePrice = document.querySelectorAll("#dd input[name='sale_price[]']");

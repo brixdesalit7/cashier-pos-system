@@ -20,25 +20,25 @@
     }
     .btn {
         visibility: hidden;   
-     }
-     .shortcut {
-         display: none;
-     }
-     .title {
-         border: none;
-         display:none;
-     }
-     .barcode {
-         display:none;
-     }
-     .product-list {
-         padding: 0;
-         width: 100%;
-     }
-     .bar_code {
-         visibility: hidden;
-     }
-     input,select,span {
+    }
+    .shortcut {
+        display: none;
+    }
+    .title {
+        border: none;
+        display:none;
+    }
+    .barcode {
+        display:none;
+    }
+    .product-list {
+        padding: 0;
+        width: 1000px;
+    }
+    .bar_code {
+        visibility: hidden;
+    }
+    input,select,span {
         border: none !important; 
         border-width: 0; 
         box-shadow: none;
