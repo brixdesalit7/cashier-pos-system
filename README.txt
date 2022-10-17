@@ -1,8 +1,8 @@
 CASHIER POS SYSTEM USING BARCODE SCANNER DEVICE
 
 
-front-end : bootstrap5,jquery data table | table plug-in
-back-end : PHP,MySQL
+FrontEnd : bootstrap5,jquery data table | table plug-in
+BackEnd : PHP,MySQL
 
 LOGIN
 user-name : admin
